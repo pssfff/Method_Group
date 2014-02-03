@@ -3,7 +3,7 @@ Group ? BtheB Homework Assignment
 
 ```{r}
 # Load library to use BtheB data set and qplot
-library(HSAUR)
+library(HSAUR2)
 library(ggplot2)
 ```
 
