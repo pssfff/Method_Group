@@ -1,0 +1,79 @@
+Group ? BtheB Homework Assignment
+========================================================
+
+```{r}
+# Load library to use BtheB data set and qplot
+library(HSAUR)
+library(ggplot2)
+```
+
+Q1. A few sentences of background/context for the BtheB dataset.
+
+The BtheB dataset is from a clinical trial of an interactive, multimedia program known as "Beat the Blues" designed to deliver cognitive behavioural therapy to depressed patients via a computer terminal. Patients with depression were randomly assigned to either the Beating the Blues program, or to "Treatment as Usual (TAU)". Patients we evaluated before the start of the program and again at 2, 5, 6 and 8 months. The datset consists of 100 observations of 100 patients witht eh following 8 variables:
+
+drug
+
+    did the patient take anti-depressant drugs (No or Yes).
+    
+length
+
+    the length of the current episode of depression, a factor with levels <6m (less than six months) and >6m (more than six months).
+treatment
+
+    treatment group, a factor with levels TAU (treatment as usual) and BtheB (Beat the Blues)
+    
+bdi.pre
+
+    Beck Depression Inventory II before treatment.
+bdi.2m
+
+    Beck Depression Inventory II after two months.
+bdi.5m
+
+    Beck Depression Inventory II after four months.
+bdi.6m
+
+    Beck Depression Inventory II after six months.
+bdi.8m
+
+    Beck Depression Inventory II after eight months. 
+    
+```{r}
+summary(BtheB)
+```
+
+Q2. A quantitative and/or visual description of what variables you chose to use for your analysis, along with a hypothesis (or two) that you will be testing.
+
+- We selected bdi.pre and bdi.post5 for the two treatments
+- We think that 5 months is enough time to differeniate between each impact of the two treatments.
+- OUr hypothesis is that BtheB treatment is more effective for paients with more severe symptom
+
+Q3. A description of the characteristics of the missing data (including a figure if needed) and a statement and justification as to whether your group is concerned about the missingness having an impact on your analysis.
+
+- In this case, the missingness in the data at the 5 month mark where we have done our analysis isnot of to much concern because the range of values for bdi.pre in the remaining subjects is quite close to the entire original cohort. The group remaining is also fairly equally divided in terms of anti-depressant drug use, length of treatment and treatment type. The sample size has decreased by about half, so this could have an effect on our conclusions, but the sample is still diverse enough to not be too concerned about the loss of 52 subjects out of 100.
+
+this is a summary of the data for subjects that dropped out of the study by 5 months:
+```{r}
+is_na_5m <- subset(BtheB, is.na(BtheB$bdi.5m))
+summary(is_na_5m)
+```
+
+this is a summary of the data for subjects that remained in the study after 5 months:
+```{r}
+data_5m <- subset(BtheB, BtheB$bdi.5m>=0) 
+summary(data_5m)
+```
+
+
+Q5. Results, with interpretation, of output from an SLR model. We haven't discussed yet using binary predictors or X variables, but feel free to include them. The interpretation is very similar. 
+
+- Both plots showed positivie correlation between bdi.pre (X) and bdi.5m
+- Y-intercept in the TAU plot is slightly larger
+- For the TAU plot, a one unit change in bdi.pre (X) increased around 8 in bdi.5m. However, at the BtheB plot, a one unit change in bdi.pre(x) increased around 5 in bdi.5m. 
+- We created two regression lines each for treatments,"TAU" and "BtheB" from the "BtheB" data set.
+We found a steeper slope in the BtheB treatment plot, which indicates that both treatments could alleviate depression, but the BtheB treatment became more effective as depression level increases. 
+
+ths is a lnear regression between bdi.pre and bdi.5m
+```{r}
+qplot(bdi.pre, bdi.5m, data=BtheB, geom=c("point", "smooth"),method="lm") + facet_grid(.~ treatment) + theme_bw()
+```
